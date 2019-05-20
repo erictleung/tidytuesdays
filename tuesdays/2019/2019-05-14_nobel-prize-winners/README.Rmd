@@ -1,0 +1,23 @@
+---
+title: "Nobel Laureate Publications"
+author: "Eric Leung"
+---
+
+## Introduction
+
+> "We constructed the publication records for almost all Nobel laureates in
+> physics, chemistry, and physiology or medicine from 1900 to 2016 (545 out of
+> 590, 92.4%). We first collected information manually from Nobel Prize
+> official websites, their university websites, and Wikipedia. We then match it
+> algorithmically with big data, tracing publication records from the MAG
+> database."
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+```
+
+## Exploratory data analysis
