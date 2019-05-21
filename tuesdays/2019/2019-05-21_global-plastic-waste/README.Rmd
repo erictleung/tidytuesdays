@@ -1,0 +1,25 @@
+---
+title: Global Plastic Waste
+author: Eric Leung
+---
+
+## Introduction
+
+> Plastic pollution is a major and growing problem, negatively affecting oceans
+> and wildlife health. Our World in Data has a lot of great data at the various
+> levels including globally, per country, and over time.
+
+*Note*: the data was minimally "cleaned" except column names.
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+## Exploratory data analysis
+
+```{r}
+
+```
