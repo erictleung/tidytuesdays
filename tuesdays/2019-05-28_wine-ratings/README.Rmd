@@ -1,0 +1,83 @@
+---
+title: Global Plastic Waste
+author: Eric Leung
+---
+
+## Introduction
+
+> This week's dataset is a wine-enthusiast ratings dataset from Kaggle. H/t to
+> Georgios Karamanis for sharing this week's dataset as an Issue on our GitHub!
+> If you want to submit a dataset, please drop a link and some context as an
+> issue. Thanks!
+>
+> An article with some interesting graphs (different dataset) can be found here.
+> They found some clear relationships, but it also appears that cost is factored
+> into their rating system. How does the Wine Enthusiast ratings scale compare?
+
+## Load packages
+
+```{r}
+library(tidyverse)
+```
+
+## Load data
+
+```{r}
+wine_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-28/winemag-data-130k-v2.csv")
+```
+
+## Exploratory data analysis
+
+**Number of countries**
+
+```{r}
+wine_ratings %>%
+    distinct(country) %>%
+    nrow()
+```
+
+**Range of points**
+
+```{r}
+wine_ratings %>%
+    select(points) %>%
+    range()
+```
+
+**Range of prices**
+
+```{r}
+wine_ratings %>%
+    select(price) %>%
+    range(na.rm = TRUE)
+```
+
+**Amount of missing-ness in data**
+
+```{r}
+
+```
+
+## What is the distribution of words used in describing wine?
+
+```{r}
+
+```
+
+## What is the relationship between price and country?
+
+```{r}
+
+```
+
+## What is the relationship between points and country?
+
+```{r}
+
+```
+
+## What is the relationship between points and price?
+
+```{r}
+
+```
