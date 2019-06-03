@@ -18,6 +18,8 @@ author: Eric Leung
 
 ```{r}
 library(tidyverse)
+library(sf)
+library(maps)
 ```
 
 ## Load data
@@ -52,32 +54,71 @@ wine_ratings %>%
     range(na.rm = TRUE)
 ```
 
-**Amount of missing-ness in data**
+**Number of missing-ness in data**
+
+Find lower bound on number of samples to use in exploration.
 
 ```{r}
-
+# Calculate number of complete cases i.e. no NA values
+wine_ratings %>%
+    complete.cases() %>%
+    sum()
 ```
 
 ## What is the distribution of words used in describing wine?
 
 ```{r}
+wine_ratings
 
 ```
 
 ## What is the relationship between price and country?
 
 ```{r}
+wine_ratings
 
 ```
 
 ## What is the relationship between points and country?
 
 ```{r}
+wine_ratings
 
 ```
 
 ## What is the relationship between points and price?
 
 ```{r}
+wine_ratings
 
 ```
+
+## What is the specifics of Oregon-based wine?
+
+Map higher quality wine with larger circles.
+
+```{r}
+# Gather Oregon map data
+us_states <- map("state", plot = FALSE, fill = TRUE)
+states_sf <- st_as_sf(us_states)
+or_sf <- filter(states_sf, ID == "oregon")
+
+# Manipulate wine data
+wine_ratings %>%
+    filter(province == "Oregon") %>%
+    group_by(region_1) %>%
+    mutate(avg_points = mean(points)) %>%
+    mutate(avg_price = mean(price)) %>%
+    mutate(avg_pts_prc = avg_points / avg_price)
+```
+
+```{r}
+# Plot distribution of wine scores on Oregon
+ggplot() +
+    geom_sf(data = or_sf)
+```
+
+## Helpful resources
+
+- https://mhallwor.github.io/_pages/Tidyverse_intro
+- https://ggplot2.tidyverse.org/reference/ggsave.html
