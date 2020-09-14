@@ -17,6 +17,23 @@ TODO
 
 TODO
 
+## List of themes and extensions
+
+**Themes**
+
+- [Built-in ggplot2
+  themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+- [`ggthemes`](https://github.com/jrnold/ggthemes)
+- [`hrbrthemes`](https://github.com/hrbrmstr/hrbrthemes)
+- [`ggthemr`](https://github.com/cttobin/ggthemr) - Examples
+  https://www.shanelynn.ie/themes-and-colours-for-r-ggplots-with-ggthemr/
+- [`tvthemes`](https://github.com/Ryo-N7/tvthemes)
+- [`ggsci`](https://github.com/nanxstats/ggsci)
+
+**Miscelleneous**
+
+- [`gghighlight`](https://github.com/yutannihilation/gghighlight)
+
 ## Helpful tools
 
 **Colors**
@@ -42,3 +59,5 @@ TODO
   Book with more extensive explanations of functions
 - [Top 50 ggplot2 Visualizations - The Master List (With Full R
   Code)](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+- [BBC Visual and Data Journalism Cookbook for R
+  Graphics](https://bbc.github.io/rcookbook/)
