@@ -7,6 +7,7 @@ https://github.com/rfordatascience/tidytuesday
 
 - [Index of Tuesdays](#index-of-tuesdays)
 - [Index of ggplot2 functions and tasks implemented](#index-of-ggplot2-functions-and-tasks-implemented)
+- [List of themes and extensions](#list-of-themes-and-extensions)
 - [Helpful tools](#helpful-tools)
 
 ## Index of Tuesdays
