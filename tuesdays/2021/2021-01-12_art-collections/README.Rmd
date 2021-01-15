@@ -7,7 +7,7 @@ output: html_document
 
 ## Setup
 
-```{r setup, include=FALSE, warning=FALSE}
+```{r setup, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # Utilities
@@ -25,6 +25,9 @@ library(ggplot2)
 library(visdat)
 library(gganimate)
 library(ggalt)
+
+# Misc
+library(tidytext)
 
 # Summary tables
 library(gt)
@@ -75,9 +78,11 @@ Double check our filtering work.
 artwork %>%
   vis_dat()
 ```
+
 Save out data for other visualizations when needed.
 
 ```{r, eval=FALSE}
+# Not run for now
 write_csv(artwork, here("data", "artwork.csv"))
 ```
 
@@ -113,6 +118,8 @@ top_20_info %>%
   )
 ```
 
+Use dumbell plot to plot above table
+
 https://www.r-bloggers.com/2016/04/ggplot2-exercising-with-ggalt-dumbbells/
 
 ```{r}
@@ -120,6 +127,8 @@ top_20_info
 ```
 
 ## Questions
+
+https://stackoverflow.com/questions/34522732/changing-fonts-in-ggplot2
 
 ### How do the artists' works dominate the Tate collection over time?
 
@@ -142,6 +151,8 @@ Bar plot
 ### What is the overall sentiment of the artwork titles?
 
 Chatterplot
+
+https://towardsdatascience.com/rip-wordclouds-long-live-chatterplots-e76a76896098
 
 ```{r}
 
@@ -175,6 +186,8 @@ Faceted radar plot https://github.com/ricardo-bion/ggradar
 ### How similar are the artists in the collection?
 
 Network analysis, derive distance measure
+
+https://github.com/bnosac/word2vec
 
 - Title
 - Medium
