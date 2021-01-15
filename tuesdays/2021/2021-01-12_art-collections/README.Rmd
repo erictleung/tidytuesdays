@@ -1,0 +1,187 @@
+---
+title: "Art Collections"
+author: "Eric Leung"
+date: "2021-01-13"
+output: html_document
+---
+
+## Setup
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Utilities
+library(tidytuesdayR)
+library(readr)
+library(here)
+
+# Data wrangling
+library(dplyr)
+library(tidyr)
+library(tidytext)
+
+# plotting libraries
+library(ggplot2)
+library(visdat)
+library(gganimate)
+library(ggalt)
+
+# Summary tables
+library(gt)
+```
+
+## Data
+
+```{r get_data}
+tuesdata <- tidytuesdayR::tt_load("2021-01-12")
+artwork <- tuesdata$artwork
+artists <- tuesdata$artists
+```
+
+## Basic exploration
+
+Let's look at the basic dimensions of the data.
+
+```{r}
+dim(artwork)
+dim(artists)
+```
+
+The `artwork` dataset is quite large 
+
+```{r}
+artwork %>%
+  sample_frac(0.5) %>%
+  vis_dat()
+```
+
+Let's subset to remove the `NA` columns, unneeded, and rows with missing data.
+
+```{r}
+artwork <-
+  artwork %>%
+  select(-c(
+    inscription, thumbnailCopyright, depth,  # Lots of NA values
+    thumbnailUrl, url,  # Not needed for now
+    accession_number, id, creditLine
+    )) %>%
+  drop_na()
+dim(artwork)
+```
+
+Double check our filtering work.
+
+```{r}
+artwork %>%
+  vis_dat()
+```
+Save out data for other visualizations when needed.
+
+```{r, eval=FALSE}
+write_csv(artwork, here("data", "artwork.csv"))
+```
+
+## Table creation
+
+```{r}
+top_20 <-
+  artwork %>%
+  group_by(artist) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  top_n(20)
+year_artists <-
+  artwork %>%
+  select(artist, year) %>%
+  group_by(artist) %>%
+  mutate(min = min(year),
+         max = max(year)) %>%
+  select(artist, min, max) %>%
+  distinct()
+top_20_info <-
+  top_20 %>%
+  left_join(year_artists) %>%
+  select(artist, n, min, max)
+top_20_info %>%
+  gt() %>%
+  tab_header("Top 20 Artists in the Tate Collection") %>%
+  cols_label(
+    artist = "Artist",
+    n = "Count",
+    min = "Earliest Year",
+    max = "Latest Year"
+  )
+```
+
+https://www.r-bloggers.com/2016/04/ggplot2-exercising-with-ggalt-dumbbells/
+
+```{r}
+top_20_info
+```
+
+## Questions
+
+### How do the artists' works dominate the Tate collection over time?
+
+Racing bar plot
+
+Inspired: https://stackoverflow.com/a/53163549/6873133
+
+```{r}
+
+```
+
+### Which artists within the Tate collection occupy the largest cumulative area?
+
+Bar plot
+
+```{r}
+
+```
+
+### What is the overall sentiment of the artwork titles?
+
+Chatterplot
+
+```{r}
+
+```
+
+### Top artists in the collection, how do their titles differ?
+
+Facetted chatter plot
+
+```{r}
+
+```
+
+### How does the medium of the artwork change over time?
+
+Stacked line plot
+
+```{r}
+
+```
+
+### How often did each artist paint over the years (based on the collection)?
+
+Faceted radar plot https://github.com/ricardo-bion/ggradar
+
+```{r}
+
+```
+
+
+### How similar are the artists in the collection?
+
+Network analysis, derive distance measure
+
+- Title
+- Medium
+- Size
+- Year
+
+```{r}
+
+```
+
