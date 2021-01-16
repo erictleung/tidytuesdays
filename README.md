@@ -44,6 +44,7 @@ TODO
   designing a good color pallete to visualize
 - [bbplot](https://github.com/bbc/bbplot) - Create and export graphics in the
   style of the BBC News team
+- [Color Palette Color Schemes](https://www.color-hex.com/color-palettes/)
 
 **Graph types**
 
