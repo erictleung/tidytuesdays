@@ -7,13 +7,16 @@ output: html_document
 
 ## Setup
 
-```{r setup, warning=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = "./figures")
 
 # Utilities
 library(tidytuesdayR)
 library(readr)
 library(here)
+library(forcats)
 
 # Data wrangling
 library(dplyr)
@@ -28,6 +31,9 @@ library(ggalt)
 
 # Misc
 library(tidytext)
+library(extrafont)
+# font_import()  # Import if needed
+loadfonts(device = "win")
 
 # Summary tables
 library(gt)
@@ -67,8 +73,7 @@ artwork <-
     inscription, thumbnailCopyright, depth,  # Lots of NA values
     thumbnailUrl, url,  # Not needed for now
     accession_number, id, creditLine
-    )) %>%
-  drop_na()
+    ))
 dim(artwork)
 ```
 
@@ -89,12 +94,12 @@ write_csv(artwork, here("data", "artwork.csv"))
 ## Table creation
 
 ```{r}
-top_20 <-
+top_50 <-
   artwork %>%
   group_by(artist) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  top_n(20)
+  top_n(50)
 year_artists <-
   artwork %>%
   select(artist, year) %>%
@@ -103,13 +108,13 @@ year_artists <-
          max = max(year)) %>%
   select(artist, min, max) %>%
   distinct()
-top_20_info <-
-  top_20 %>%
+top_50_info <-
+  top_50 %>%
   left_join(year_artists) %>%
   select(artist, n, min, max)
-top_20_info %>%
+top_50_info %>%
   gt() %>%
-  tab_header("Top 20 Artists in the Tate Collection") %>%
+  tab_header("Top 50 Artists in the Tate Collection") %>%
   cols_label(
     artist = "Artist",
     n = "Count",
@@ -118,26 +123,128 @@ top_20_info %>%
   )
 ```
 
-Use dumbell plot to plot above table
-
-https://www.r-bloggers.com/2016/04/ggplot2-exercising-with-ggalt-dumbbells/
-
-```{r}
-top_20_info
-```
-
 ## Questions
 
 https://stackoverflow.com/questions/34522732/changing-fonts-in-ggplot2
 
-### How do the artists' works dominate the Tate collection over time?
-
-Racing bar plot
-
-Inspired: https://stackoverflow.com/a/53163549/6873133
+### What is range of years painted of the aquired artwork of top artists?
 
 ```{r}
+top_50_info %>%
+  mutate(artist = fct_inorder(artist)) %>%
+  ggplot(aes(x = min, xend = max, y = fct_rev(artist))) +
+  geom_dumbbell(size = 1.5,
+                dot_guide = TRUE,
+                colour = "#a3c4dc",
+                colour_xend = "#0e668b",
+                dot_guide_size = 0.15) +
+  labs(title = "Top 50 Artists in the Tate Collection",
+       subtitle = "Artists ranked by number of items in the collection",
+       caption = "Data from the Tate Collection https://www.tate.org.uk/") +
+  xlab("Year artwork was painted") +
+  ylab("Artist") +
+  theme_bw() +
+  theme(text = element_text(family = "Verdana"),
+        plot.background = element_rect(fill = "#f7f7f7"),
+        panel.background = element_rect(fill = "#f7f7f7"),
+        panel.grid.major.x = element_line(),
+        panel.grid.minor = element_blank(),
+        axis.ticks = element_blank(),
+        panel.border = element_blank())
+```
 
+```{r}
+ggsave(here("tidytuesday", "2021", "2021-01-12_art-collections", "top_artists_barbbell.png"),
+       width = 5,
+       height = 15)
+```
+
+```{r}
+top_50 %>%
+  left_join(artwork) %>%
+  mutate(artist = fct_infreq(artist)) %>%
+  ggplot(aes(x = year, y = fct_rev(artist))) +
+  geom_density_ridges()
+```
+
+```{r}
+ggsave(here("tidytuesday", "2021", "2021-01-12_art-collections", "top_artists_ridges.png"),
+       width = 5,
+       height = 15)
+```
+
+### How do the artists' works dominate the Tate collection over time?
+
+Inspired by: https://stackoverflow.com/a/53163549/6873133
+
+```{r}
+top_50_chasing <-
+  top_50 %>%
+  # Gather other information about art
+  left_join(artwork) %>%
+  select(artist, acquisitionYear) %>%
+  drop_na() %>%   # Drop artwork with no acquisition year
+
+  # Go by decade because by year would take too long
+  mutate(yearDecade = round(acquisitionYear / 10) * 10) %>%
+  group_by(artist, yearDecade) %>%
+  count(yearDecade) %>%
+  arrange(yearDecade) %>%
+
+  # Aggregate collection acquired over time
+  group_by(artist) %>%
+  mutate(aggcount = cumsum(n)) %>%
+
+  # Fill in missing decades when no art was collected for that artist
+  complete(yearDecade = full_seq(yearDecade, 10)) %>%
+  mutate(aggcount = spline(x = yearDecade,
+                           y = aggcount,
+                           xout = yearDecade,
+                           method = "hyman")$y) %>%
+  mutate(aggcount = ifelse(is.na(aggcount), n, aggcount)) %>%
+
+  # Rank artists by year
+  group_by(yearDecade) %>%
+  mutate(rank = min_rank(-aggcount) * 1) %>%
+  ungroup()
+```
+
+```{r}
+p <-
+  top_50_chasing %>%
+  ggplot(aes(x = rank,
+             group = artist,
+             fill = as.factor(artist),
+             color = as.factor(artist))) +
+  geom_tile(aes(y = aggcount / 2,
+                height = aggcount,
+                width = 0.9),
+            alpha = 0.8,
+            color = NA) +
+  geom_text(aes(y = 0,
+                label = paste(artist, " ")),
+            vjust = 0.2,
+            hjust = 1) +
+  coord_flip(clip = "off",
+             expand = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  guides(color = FALSE,
+         fill = FALSE) +
+  labs(title = '{closest_state %>% as.numeric %>% floor}') +
+  transition_states(yearDecade,
+                    transition_length = 3,
+                    state_length = 0.5) +
+  enter_grow() +
+  exit_shrink() +
+  ease_aes('linear')
+
+animate(p,
+        fps = 20,
+        duration = 15,
+        width = 400,
+        height = 600,
+        end_pause = 10)
 ```
 
 ### Which artists within the Tate collection occupy the largest cumulative area?
