@@ -12,7 +12,7 @@ https://github.com/rfordatascience/tidytuesday
 
 ## Index of Tuesdays
 
-TODO
+- [2021-03-17 The Office](tuesdays/2020/2020-03-17_the-office)
 
 ## Index of ggplot2 functions and tasks implemented
 
@@ -22,18 +22,17 @@ TODO
 
 **Themes**
 
-- [Built-in ggplot2
-  themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+- [Built-in ggplot2 themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 - [`ggthemes`](https://github.com/jrnold/ggthemes)
 - [`hrbrthemes`](https://github.com/hrbrmstr/hrbrthemes)
-- [`ggthemr`](https://github.com/cttobin/ggthemr) - Examples
-  https://www.shanelynn.ie/themes-and-colours-for-r-ggplots-with-ggthemr/
+- [`ggthemr`](https://github.com/cttobin/ggthemr) - Examples https://www.shanelynn.ie/themes-and-colours-for-r-ggplots-with-ggthemr/
 - [`tvthemes`](https://github.com/Ryo-N7/tvthemes)
 - [`ggsci`](https://github.com/nanxstats/ggsci)
 
 **Miscelleneous**
 
 - [`gghighlight`](https://github.com/yutannihilation/gghighlight)
+- [`ggbeeswarm`](https://github.com/eclarke/ggbeeswarm)
 
 ## Helpful tools
 
